@@ -12,8 +12,11 @@ cursor = conn.cursor()
 
 # Function 1
 def GetICsAndWeights(rDate, indexCode):
-	'''Return a list called ICs that contains the constituents of the 
-	respective indexCode in the same month and year as the inputted rDate.'''
+	'''Return 
+	(1) a vector called ICs that contains the constituents of the 
+	respective indexCode in the same month and year as the inputted rDate.
+	(2) a vector called weights that contains the percentage contribution of
+	each stock to the respective index'''
 	
 	query = 'SELECT * FROM tbl_Index_Constituents'
 	cursor.execute(query)
@@ -29,7 +32,6 @@ def GetICsAndWeights(rDate, indexCode):
 		colName = "Index New"
 	else:
 		colName = indexCode + " New"
-	print(colName)
 
 	colNo = 0
 	for col in cursor.description:
@@ -37,7 +39,7 @@ def GetICsAndWeights(rDate, indexCode):
 			break
 		colNo += 1 
 
-	# Find alpha codes and append to ICs list
+	# Find relevent records
 	for record in cursor:
 
 		# Skip records outside given date
@@ -54,11 +56,35 @@ def GetICsAndWeights(rDate, indexCode):
 	for i in range(0, len(weights)):
 		weights[i] = round(weights[i]/totalCap,3)
 
-	
-	return ICs, weights
+	return np.array(ICs), np.array(weights)
 
 # Function 2
+def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
+	'''
+	return a numeric column vector/list called betas that contains the betas of the respective shares contained in ICs, in the same month and year as the inputted rDate
 
+	mktIndexCode: "J203", "J200", "J250", "J257", "J258"
+	'''
+	query = 'SELECT * FROM tbl_BA_Beta_Output'
+	cursor.execute(query)
+
+	betas = list()
+	specVols = list()
+
+	# Find relevent records
+	for record in cursor:
+		# Skip records outside given date
+		recordDate = record[0]
+		if (rDate.year != recordDate.year or rDate.month != recordDate.month):
+			continue
+		#print(record[0:2])
+	
+		instrument = record[1]
+		if instrument in ICs:
+			betas.append(record[8])   	# betas in column 8
+			specVols.append(record[-1]) # specific vol. in last column
+
+	return 0
 
 # Function 3
 
@@ -67,4 +93,6 @@ def GetICsAndWeights(rDate, indexCode):
 if __name__ == "__main__":
 	a, b = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
 	print(a)
-	print(b)
+	# print(b)
+
+	c = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), a, None)
