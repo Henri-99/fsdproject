@@ -11,18 +11,16 @@ conn = pyodbc.connect('Driver={SQL Server};'
 cursor = conn.cursor()
 
 # Function 1
-# rDate: one of the quarter end dates corresponding to reporting dates
-# indexCode: "ALSI", "FLED", "LRGC", etc
-#
 def GetICsAndWeights(rDate, indexCode):
-	'''return a string column vector/list called ICs that contains 
-	the constituents of the respective indexCode in the same month and year 
-	as the inputted rDate.'''
+	'''Return a list called ICs that contains the constituents of the 
+	respective indexCode in the same month and year as the inputted rDate.'''
 	
 	query = 'SELECT * FROM tbl_Index_Constituents'
 	cursor.execute(query)
 
 	ICs = list()
+	weights = list()
+	totalCap = 0
 
 	# Find relevant column number from indexCode
 	if (indexCode == "ALSI" or indexCode == "FLED"):
@@ -42,7 +40,7 @@ def GetICsAndWeights(rDate, indexCode):
 	# Find alpha codes and append to ICs list
 	for record in cursor:
 
-		# Isolate records by year and month
+		# Skip records outside given date
 		recordDate = record[0]
 		if (rDate.year != recordDate.year or rDate.month != recordDate.month):
 			continue
@@ -50,15 +48,23 @@ def GetICsAndWeights(rDate, indexCode):
 		# Isolate records by index column
 		if (record[colNo] == indexCode):
 			ICs.append(record[2])
-			#print(record[0], record[2], record[colNo])
+			weights.append(record[10]) # Column 10 is gross market cap
+			totalCap = totalCap + record[10]
 
-	return ICs
+	for i in range(0, len(weights)):
+		weights[i] = round(weights[i]/totalCap,3)
 
-print(GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI"))
-
-
+	
+	return ICs, weights
 
 # Function 2
 
 
 # Function 3
+
+
+# Testing program
+if __name__ == "__main__":
+	a, b = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
+	print(a)
+	print(b)
