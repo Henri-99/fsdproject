@@ -70,6 +70,8 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 
 	betas = list()
 	specVols = list()
+	totVols = list()
+	mktVols = list()
 
 	# Find relevent records
 	for record in cursor:
@@ -83,16 +85,31 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 		if instrument in ICs:
 			betas.append(record[8])   	# betas in column 8
 			specVols.append(record[-1]) # specific vol. in last column
+			totVols.append(record[-2])  # total vol. in second last column
+		
+	# Calculate market volatility from betas, total + specific volatilites
+	for i in range(len(betas)):
+		totRisk = totVols[i]
+		uniRisk = specVols[i]
+		beta = betas[i]
+		if (totRisk != 0 and uniRisk != 0 and beta != 0):
+			mktVol = np.sqrt(totRisk**2 - uniRisk**2)/beta
+			#print(i,":",mktVol)
+			mktVols.append(mktVol)
+	mktVol = np.median(mktVols)
 
-	return 0
+	return betas, specVols, mktVol
 
 # Function 3
+
 
 
 # Testing program
 if __name__ == "__main__":
 	a, b = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
-	print(a)
+	# print(a)
 	# print(b)
 
-	c = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), a, None)
+	c, d, e = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), a, "J203")
+
+	print("Market volatility:", e)
