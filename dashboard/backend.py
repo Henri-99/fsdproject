@@ -71,7 +71,6 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 	betas = list()
 	specVols = list()
 	totVols = list()
-	mktVols = list()
 
 	# Find relevent records
 	for record in cursor:
@@ -89,14 +88,8 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 			totVols.append(record[-2])  # total vol. in second last column
 		
 	# Calculate market volatility from betas, total + specific volatilites
-	for i in range(len(betas)):
-		totRisk = totVols[i]
-		uniRisk = specVols[i]
-		beta = betas[i]
-		if (totRisk != 0 and uniRisk != 0 and beta != 0):
-			mktVol = np.sqrt(totRisk**2 - uniRisk**2)/beta
-			mktVols.append(mktVol)
-	mktVol = np.median(mktVols)
+		if(instrument == index and index == mktIndexCode):
+			mktVol = record[-2]
 
 	return np.array(betas), np.array(specVols), mktVol
 
@@ -124,15 +117,15 @@ def CalcStats(weights, betas, mktVol, specVols):
 	pfVol = pfSysVol + pfSpecVol
 
 	# Correlation Matrix
-	# corrMat = QUESTIONS
+	corrMat = np.sqrt(np.diag(totCov))
 
-	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol
+	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
 
 
 # Testing program
 if __name__ == "__main__":
 	ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
-	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J203")
-	pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol = CalcStats(weights, betas, mktVol, specVols)
+	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J258")
+	pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
 
-	print(pfVol)
+	print(corrMat)
