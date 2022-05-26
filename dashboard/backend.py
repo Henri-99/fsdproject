@@ -75,14 +75,15 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 
 	# Find relevent records
 	for record in cursor:
-		# Skip records outside given date
 		recordDate = record[0]
+		instrument = record[1]
+		index = record[2]	
+		
+		# Skip records outside given date
 		if (rDate.year != recordDate.year or rDate.month != recordDate.month):
 			continue
-		#print(record[0:2])
 	
-		instrument = record[1]
-		if instrument in ICs:
+		if (instrument in ICs and index == mktIndexCode):
 			betas.append(record[8])   	# betas in column 8
 			specVols.append(record[-1]) # specific vol. in last column
 			totVols.append(record[-2])  # total vol. in second last column
@@ -94,22 +95,44 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 		beta = betas[i]
 		if (totRisk != 0 and uniRisk != 0 and beta != 0):
 			mktVol = np.sqrt(totRisk**2 - uniRisk**2)/beta
-			#print(i,":",mktVol)
 			mktVols.append(mktVol)
 	mktVol = np.median(mktVols)
 
-	return betas, specVols, mktVol
+	return np.array(betas), np.array(specVols), mktVol
 
 # Function 3
+def CalcStats(weights, betas, mktVol, specVols):
+	# Portfolio Beta
+	pfBeta = np.multiply(weights.transpose(), betas)
 
+	# Systematic Covariance Matrix
+	sysCov = np.multiply(betas, betas.transpose()) * mktVol**2
+
+	# Portfolio Systematic Variance
+	pfSysVol = np.multiply(pfBeta, betas.transpose(), weights) * mktVol**2
+
+	# Specific Covariance Matrix 
+	specCov = np.multiply(np.diag(specVols), np.diag(specVols))
+
+	# Portfolio Specific Variance
+	pfSpecVol = np.multiply(np.multiply(weights.transpose(), specCov),weights)
+
+	# Total Covariance Matrix
+	totCov = sysCov + specCov
+
+	# Portfolio Variance
+	pfVol = pfSysVol + pfSpecVol
+
+	# Correlation Matrix
+	# corrMat = QUESTIONS
+
+	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol
 
 
 # Testing program
 if __name__ == "__main__":
-	a, b = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
-	# print(a)
-	# print(b)
+	ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
+	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J203")
+	pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol = CalcStats(weights, betas, mktVol, specVols)
 
-	c, d, e = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), a, "J203")
-
-	print("Market volatility:", e)
+	print(pfVol)
