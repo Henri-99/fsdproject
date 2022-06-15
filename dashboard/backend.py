@@ -47,6 +47,10 @@ def GetICsAndWeights(rDate, indexCode):
 		if (rDate.year != recordDate.year or rDate.month != recordDate.month):
 			continue
 
+		if (record[6] == '1'):
+			print(record)
+			continue
+
 		# Isolate records by index column
 		if (record[colNo] == indexCode):
 			ICs.append(record[2])
@@ -79,15 +83,15 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 		index = record[2]	
 		
 		# Skip records outside given date
-		if (rDate.year != recordDate.year or rDate.month != recordDate.month):
+		if (rDate.year != recordDate.year or rDate.month != recordDate.month or record[8] == 0):
 			continue
-	
+
 		if (instrument in ICs and index == mktIndexCode):
 			betas.append(record[8])   	# betas in column 8
 			specVols.append(record[-1]) # specific vol. in last column
 			totVols.append(record[-2])  # total vol. in second last column
 		
-	# Calculate market volatility from betas, total + specific volatilites
+		# Total market volatility
 		if(instrument == index and index == mktIndexCode):
 			mktVol = record[-2]
 
@@ -117,7 +121,10 @@ def CalcStats(weights, betas, mktVol, specVols):
 	pfVol = pfSysVol + pfSpecVol
 
 	# Correlation Matrix
-	corrMat = np.sqrt(np.diag(totCov))
+	D = np.diagflat(np.diag(totCov))
+	invD = D #np.linalg.inv(D) - FIX THIS BUG WITH "0" ENTRIES
+	#set beta to 1 and volatility equal to that of the index
+	corrMat = np.multiply(invD, totCov, invD)
 
 	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
 
@@ -127,5 +134,3 @@ if __name__ == "__main__":
 	ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
 	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J258")
 	pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
-
-	print(corrMat)

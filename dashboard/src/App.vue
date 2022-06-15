@@ -1,81 +1,65 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+	<header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+		<table class="center">
+			<tr>
+				<td><img alt="UCT logo" class="logo" src="./assets/uct_logo.png" height="200" /></td>
+				<td><img alt="AIFMRM logo" class="logo" src="./assets/logo.svg" width="400" height="250" /></td>
+			</tr>
+		</table>
 
-  <main>
-    <TheWelcome />
-  </main>
+		<div class="wrapper">
+			<HelloWorld msg="Welcome to the FSD Dashboard!" />
+		</div>
+
+
+	</header>
+
+	<main>
+		<div class="backlog">
+			<p>
+				<b>Backlog</b>
+				<li>Styling</li>
+				<li>Navigation bar</li>
+				<li>Flask API</li>
+				<li>User forms</li>
+				<li>Info about AIFMRM</li>
+				<li>Indices</li>
+				<li>Shares</li>
+				<li>Graphs</li>
+				<li>FAQ</li>
+			</p>
+
+		</div>
+	</main>
 </template>
 
 <style>
-@import './assets/base.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
+.center {
+  margin-left: auto;
+  margin-right: auto;
 }
+
 
 header {
-  line-height: 1.5;
+	text-align : center;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.wrapper {
+	font-family: Arial, Helvetica, sans-serif;
+	
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+.backlog {
+	margin-left: 60pt;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-}
+/* Colours: grey:  #1D1D1B
+			blue:  #1D70B7 */
 </style>
