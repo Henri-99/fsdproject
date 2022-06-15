@@ -1,10 +1,13 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-	<header>
+	
 
+	<header>
+		<NavBar />
 		<table class="center">
 			<tr>
 				<td><img alt="UCT logo" class="logo" src="./assets/uct_logo.png" height="200" /></td>
@@ -45,7 +48,6 @@ import HelloWorld from './components/HelloWorld.vue'
   margin-right: auto;
 }
 
-
 header {
 	text-align : center;
 }
@@ -59,6 +61,7 @@ header {
 	margin-left: 60pt;
 	font-family: Arial, Helvetica, sans-serif;
 }
+
 
 /* Colours: grey:  #1D1D1B
 			blue:  #1D70B7 */
