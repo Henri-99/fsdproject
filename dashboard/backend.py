@@ -128,9 +128,25 @@ def CalcStats(weights, betas, mktVol, specVols):
 
 	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
 
+def converter(ICs, weights):
+	for stock in range(0, len(ICs)):
+		out = "{ value: " + str(weights[stock]) + ', name: "' + str(ICs[stock]) + '" },'
+		print(out)
+	
+	print('[', end = "")
+	for stock in range(0, len(ICs)):
+		out = '"' + str(ICs[stock]) + '"'
+		if (stock < len(ICs)-1): out = out + ","
+		print(out, end = " ")
+	print(']')
 
 # Testing program
 if __name__ == "__main__":
 	ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
-	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J258")
-	pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
+	print(ICs)
+	print(weights)
+	converter(ICs, weights)
+	#betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J258")
+	#pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
+
+

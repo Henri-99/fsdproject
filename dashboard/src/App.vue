@@ -2,6 +2,7 @@
 import HelloWorld from './components/HelloWorld.vue'
 import NavBar from './components/NavBar.vue'
 import charts from './components/charts.vue';
+import linechart from './components/linechart.vue';
 
 </script>
 
@@ -43,21 +44,9 @@ import charts from './components/charts.vue';
         <button class="btn btn-primary btn-lg" type="button"><a href="https://www.fbcironton.org/hp_wordpress/wp-content/uploads/2019/12/085188115_prevstill.jpeg">Click to see a surprise</a></button>
       </div>
     </div>
-		<div class="backlog">
-			<p>
-				<b>Backlog</b>
-				<li>Styling</li>
-				<li>Navigation bar</li>
-				<li>Flask API</li>
-				<li>User forms</li>
-				<li>Info about AIFMRM</li>
-				<li>Indices</li>
-				<li>Shares</li>
-				<li>Graphs</li>
-				<li>FAQ</li>
-			</p>
-
-		</div>
+		
+		<charts />
+		<linechart />
 	</main>
 </template>
 
