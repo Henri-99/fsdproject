@@ -13,7 +13,7 @@ import readfile from './components/readfile.vue'
 		<NavBar />
 		<table class="center">
 			<tr>
-				<td><img alt="UCT logo" class="logo" src="./assets/uct_logo.png" height="200" /></td>
+				<td><img alt="UCT logo" class="logo" src="./assets/uct.png" height="200" /></td>
 				<td><img alt="AIFMRM logo" class="logo" src="./assets/logo.svg" width="400" height="250" /></td>
 			</tr>
 		</table>

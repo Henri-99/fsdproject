@@ -39,7 +39,8 @@
 	<nav class="navbar navbar-expand-lg bg-light sticky-top">
   <div class="container">
     <a class="navbar-brand" href="http://www.aifmrm.uct.ac.za/">
-      <img src="src/assets/logo_uct.png" alt="" width="60" height="50">
+      <img src="src/assets/uct.png" alt="" width="50" height="50" class="logo">
+
       <img src="src/assets/logo.svg" alt="" width="100" height="50">
 	  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -77,7 +78,7 @@
 }
 
 .logo{
-	padding-right:1rem
+	margin-right: 10px;
 }
 
 </style>
