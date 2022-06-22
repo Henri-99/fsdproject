@@ -10,7 +10,7 @@
 		<div class="flex-child">
 
 			<h2>{{ indexCode }}</h2>
-			<table class="center">
+			<table class="center" v-if="msg">
 				<tr>
 					<th>Stock</th>
 					<th>Weight</th>

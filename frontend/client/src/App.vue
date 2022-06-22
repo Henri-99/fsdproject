@@ -12,15 +12,33 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNavDropdown">
 					<ul class="navbar-nav">
-						<li class="nav-item">
+						<li class="nav-item  btn btn-primary">
 							<router-link :to="{ name: 'HomePage' }">
 								Home
 							</router-link>
 						</li>
 
-						<li class="nav-item">
+						<li class="nav-item  btn btn-primary">
 							<router-link :to="{ name: 'PingTest' }">
 								Index Composition
+							</router-link>
+						</li>
+
+						<li class="nav-item  btn btn-primary">
+							<router-link :to="{ name: 'TimeSeries' }">
+								Time Series
+							</router-link>
+						</li>
+
+						<li class="nav-item  btn btn-primary">
+							<router-link :to="{ name: 'PingTest' }">
+								Matrices
+							</router-link>
+						</li>
+
+						<li class="nav-item  btn btn-primary">
+							<router-link :to="{ name: 'PingTest' }">
+								FAQs
 							</router-link>
 						</li>
 					</ul>
@@ -29,12 +47,14 @@
 		</nav>
 	</header>
 
-	<div id="app">
+	<body>
+		<div id="app" class="body">
 
 
-		<router-view />
+			<router-view />
 
-	</div>
+		</div>
+	</body>
 
 </template>
 
@@ -45,6 +65,10 @@
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
 	color: #2c3e50;
+}
+
+.body {
+	margin-top: 1rem;
 }
 
 .wrapper {
@@ -63,7 +87,36 @@
 }
 
 .nav-item{
+    color: #000000;
+    text-decoration: none;
 	margin-left: 10px;
 	font-size: 20px;
 }
+
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: white;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+.btn-primary{
+	background-color: #1D70B7;
+	border-color: #1a62a1;
+}
+
+
+/* Colours: grey:  #1D1D1B
+			blue:  #1D70B7 */
 </style>
