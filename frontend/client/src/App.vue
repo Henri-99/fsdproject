@@ -31,8 +31,8 @@
 						</li>
 
 						<li class="nav-item  btn btn-primary">
-							<router-link :to="{ name: 'PingTest' }">
-								Matrices
+							<router-link :to="{ name: 'StatsPage' }">
+								Statistics
 							</router-link>
 						</li>
 

@@ -1,16 +1,14 @@
 <template>
 	<div>
 		<select v-model="indexCode">
-			<option disabled value="">Select an Index Code</option>
+			<option disabled value="">Select an Index</option>
 			<option v-for="index in indices" :key="index">{{ index }}</option>
 		</select>
 	</div>
 
 	<div class="flex-container">
-		<div class="flex-child">
-
-			<h2>{{ indexCode }}</h2>
-			<table class="center" v-if="msg">
+		<div style="flex-grow: 1">
+			<table class="stocklist" v-if="indexCode">
 				<tr>
 					<th>Stock</th>
 					<th>Weight</th>
@@ -23,7 +21,7 @@
 		</div>
 
 
-		<div class="flex-child" v-if="msg">
+		<div style="flex-grow: 2" v-if="res">
 			<PieChart :key="indexCode" :indexName="indexCode" :data="msg" />
 		</div>
 
@@ -32,7 +30,7 @@
 
 <script>
 import axios from 'axios';
-import PieChart from './charts.vue';
+import PieChart from '../components/charts.vue';
 
 export default {
 	name: 'PingTest',
@@ -43,6 +41,7 @@ export default {
 		return {
 			msg: '',
 			indexCode: '',
+			res: {},
 		};
 	},
 	methods: {
@@ -71,27 +70,27 @@ export default {
 </script>
 
 <style>
-.center {
+.stocklist {
 	margin-left: auto;
-	margin-right: auto;
+	margin-right: 0;
 	border-collapse: collapse;
 }
 
-.center td,
-.center th {
+.stocklist td,
+.stocklist th {
 	border: 1px solid #ddd;
 	padding: 3px 10px 3px 10px;
 }
 
-.center tr:nth-child(even) {
+.stocklist tr:nth-child(even) {
 	background-color: #f2f2f2;
 }
 
-.center tr:hover {
+.stocklist tr:hover {
 	background-color: #ddd;
 }
 
-.center th {
+.stocklist th {
 	padding-top: 12px;
 	padding-bottom: 12px;
 	text-align: left;
@@ -102,7 +101,5 @@ export default {
 .flex-container {
     display: flex;
 }
-.flex-child {
-    flex: 1;
-}  
+
 </style>

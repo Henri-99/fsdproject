@@ -1,7 +1,8 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import HomePage from "@/views/HomePage.vue"
 import TimeSeries from "@/views/TimeSeries.vue"
-import PingTest from '../components/Ping.vue'
+import PingTest from '@/views/Ping.vue'
+import StatsPage from '@/views/StatsPage.vue'
 import PageNotFound from "@/views/PageNotFound.vue"
 
 const routes = [{
@@ -16,6 +17,11 @@ const routes = [{
         path: '/time',
         name: 'TimeSeries',
         component: TimeSeries,
+    },
+    {
+        path: '/stats',
+        name: 'StatsPage',
+        component: StatsPage,
     },
     {
         path: '/:catchAll(.*)*',
