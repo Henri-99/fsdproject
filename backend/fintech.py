@@ -42,13 +42,9 @@ def GetICsAndWeights(rDate, indexCode):
 	# Find relevent records
 	for record in cursor:
 
-		# Skip records outside given date
+		# Skip records outside given year/month
 		recordDate = record[0]
 		if (rDate.year != recordDate.year or rDate.month != recordDate.month):
-			continue
-
-		if (record[6] == '1'):
-			print(record)
 			continue
 
 		# Isolate records by index column
@@ -99,52 +95,55 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 	for i in range(0,len(betas)):
 		if not betas[i]:
 			betas[i] = 1
-			specVols[i] = mktVol 
+			specVols[i] = mktVol
+			if not totVols[i]:
+				totVols[i] = mktVol
 		
 	return np.array(betas), np.array(specVols), mktVol
 
 # Function 3
 def CalcStats(weights, betas, mktVol, specVols):
+	weights = weights[:, np.newaxis]
+	betas = betas[:, np.newaxis]
+	specVols = specVols[:, np.newaxis]
+	print("weights: ", weights.shape)
+	print("betas:   ",betas.shape)
+	print("specVol: ",specVols.shape)
+
 	# Portfolio Beta
-	pfBeta = np.multiply(weights.transpose(), betas)
+	pfBeta = np.matmul(weights.transpose(), betas)
+	print("pfBeta:  ",pfBeta.shape)
 
 	# Systematic Covariance Matrix
-	sysCov = np.multiply(betas, betas.transpose()) * mktVol**2
+	sysCov = np.matmul(betas, betas.transpose()) * mktVol**2
+	print("sysCov:  ",sysCov.shape)
 
 	# Portfolio Systematic Variance
-	pfSysVol = np.multiply(pfBeta, betas.transpose(), weights) * mktVol**2
+	pfSysVol = pfBeta * np.matmul(betas.transpose(), weights) * mktVol**2
+	print("pfSysVol:",pfSysVol.shape)
 
 	# Specific Covariance Matrix 
-	specCov = np.multiply(np.diag(specVols), np.diag(specVols))
+	specCov = np.matmul(np.diag(specVols.flat), np.diag(specVols.flat))
+	print("specCov: ",specCov.shape)
 
 	# Portfolio Specific Variance
-	pfSpecVol = np.multiply(np.multiply(weights.transpose(), specCov),weights)
+	pfSpecVol = np.matmul(np.matmul(weights.transpose(), specCov),weights)
+	print("pfSpecVol:",pfSpecVol.shape)
 
 	# Total Covariance Matrix
 	totCov = sysCov + specCov
+	print("totCov:  ",totCov.shape)
 
 	# Portfolio Variance
 	pfVol = pfSysVol + pfSpecVol
+	print("pfSysVol:",pfSysVol.shape)
 
 	# Correlation Matrix
 	D = np.diagflat(np.diag(totCov))
-	invD = D #np.linalg.inv(D) - FIX THIS BUG WITH "0" ENTRIES
-	#set beta to 1 and volatility equal to that of the index
-	corrMat = np.multiply(invD, totCov, invD)
-
+	invD = np.linalg.inv(D) 
+	corrMat = np.matmul(invD, np.matmul(totCov, invD))
+	print("corrMat: ", corrMat.shape)
 	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
-
-def converter(ICs, weights):
-	for stock in range(0, len(ICs)):
-		out = "{ value: " + str(weights[stock]) + ', name: "' + str(ICs[stock]) + '" },'
-		print(out)
-	
-	print('[', end = "")
-	for stock in range(0, len(ICs)):
-		out = '"' + str(ICs[stock]) + '"'
-		if (stock < len(ICs)-1): out = out + ","
-		print(out, end = " ")
-	print(']')
 
 # Testing program
 if __name__ == "__main__":

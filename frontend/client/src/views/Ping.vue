@@ -1,13 +1,21 @@
 <template>
-	<div>
-		<select v-model="indexCode">
-			<option disabled value="">Select an Index</option>
-			<option v-for="index in indices" :key="index">{{ index }}</option>
-		</select>
+	<div class="flex-container statform">
+		<div>
+			<select v-model="quarter">
+				<option disabled value="">Select Date</option>
+				<option v-for="quarter in dates" :key="quarter">{{ quarter }}</option>
+			</select>
+		</div>
+		<div>
+			<select v-model="indexCode">
+				<option disabled value="">Select Index</option>
+				<option v-for="index in indices" :key="index">{{ index }}</option>
+			</select>
+		</div>
 	</div>
 
-	<div class="flex-container">
-		<div style="flex-grow: 1">
+	<div class="flex-container" v-if="indexCode">
+		<div>
 			<table class="stocklist" v-if="indexCode">
 				<tr>
 					<th>Stock</th>
@@ -21,8 +29,10 @@
 		</div>
 
 
-		<div style="flex-grow: 2" v-if="res">
-			<PieChart :key="indexCode" :indexName="indexCode" :data="msg" />
+		<div>
+			<PieChart :key="quarter" :indexName="indexCode" :data="msg" />
+			<p style='font-size : 0.7rem; color : lightgray'>SMALL consists of all stocks having<br /> a weight less
+				than 0.5% </p>
 		</div>
 
 	</div>
@@ -42,11 +52,12 @@ export default {
 			msg: '',
 			indexCode: '',
 			res: {},
+			quarter: '',
 		};
 	},
 	methods: {
 		getMessage() {
-			const path = 'http://localhost:5000/ping?index='.concat(this.indexCode);
+			const path = 'http://localhost:5000/ping?index='.concat(this.indexCode, '&q=', this.quarter);
 			axios.get(path)
 				.then((res) => {
 					this.msg = res.data;
@@ -59,11 +70,19 @@ export default {
 	},
 	watch: {
 		indexCode() {
-			this.getMessage();
-		}
+			if (this.quarter !== '') {
+				this.getMessage();
+			}
+		},
+		quarter() {
+			if (this.indexCode !== '') {
+				this.getMessage();
+			}
+		},
 	},
 	created() {
 		this.indices = ["ALSI", "FLED", "LRGC", "MIDC", "SMLC", "TOPI", "RESI", "FINI", "INDI", "PCAP", "SAPY", "ALTI"];
+		this.dates = ['2021Q1','2020Q4','2020Q3','2020Q2','2020Q1','2019Q4','2019Q3','2019Q2','2019Q1','2018Q4','2018Q3','2018Q2','2018Q1','2017Q4','2017Q3'];
 	},
 
 };
@@ -93,13 +112,15 @@ export default {
 .stocklist th {
 	padding-top: 12px;
 	padding-bottom: 12px;
-	text-align: left;
+	text-align:center;
 	background-color: #348bd6;
 	color: white;
+	width: 6rem;
 }
 
 .flex-container {
     display: flex;
+	justify-content: center;
 }
 
 </style>

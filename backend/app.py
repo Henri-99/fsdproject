@@ -19,9 +19,10 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 @app.route('/ping', methods=['GET'])
 def ping_pong():
 	indexCode = request.args.get('index')
-	if not indexCode: print("No code")
+	quarter = request.args.get('q').split('Q')
+	if not indexCode or not quarter: print("No code")
 	else:
-		ICs, weights = ft.GetICsAndWeights(date.datetime(2017, 9, 15), indexCode)
+		ICs, weights = ft.GetICsAndWeights(date.datetime(int(quarter[0]), int(quarter[1])*3, 1), indexCode)
 		#weights, ICs = zip(*sorted(zip(weights, ICs), reverse=True))
 		indices = list()
 		small = 0
@@ -47,11 +48,12 @@ def stat():
 	index = request.args.get('index')
 	mktIndex = request.args.get('market')
 	stat = request.args.get('s')
+	quarter = request.args.get('q').split('Q')
 	#date
 	if not index or not mktIndex or not stat: print("Missing input")
 	else:
-		ICs, weights = ft.GetICsAndWeights(date.datetime(2017, 9, 15), index)
-		betas, specVols, mktVol = ft.GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, mktIndex)
+		ICs, weights = ft.GetICsAndWeights(date.datetime(int(quarter[0]), int(quarter[1])*3, 1), index)
+		betas, specVols, mktVol = ft.GetBetasMktAndSpecVols(date.datetime(int(quarter[0]), int(quarter[1])*3, 1), ICs, mktIndex)
 		pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = ft.CalcStats(weights, betas, mktVol, specVols)
 		print(stat)
 		if (stat == 'beta'):

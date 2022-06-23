@@ -85,7 +85,8 @@ export default defineComponent({
 
 <style scoped>
 .piechart {
-	height: 50vw;
-	margin: 10rem 5rem 5rem 5rem;
+	height: 50rem;
+	width: 50rem;
+	margin: 0rem 3rem 0rem 3rem;
 }
 </style>

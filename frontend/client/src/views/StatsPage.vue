@@ -1,29 +1,43 @@
 <template>
-	<div>
-		<select v-model="indexCode">
-			<option disabled value="">Select an Index</option>
-			<option v-for="index in indices" :key="index">{{ index }}</option>
-		</select>
-	</div>
-	<div>
-		<select v-model="mktIndex">
-			<option disabled value="">Select a Market Index</option>
-			<option v-for="index in mktIndices" :key="index">{{ index }}</option>
-		</select>
-	</div>
-	<div>
-		<select v-model="stat">
-			<option disabled value="">Select a Statistic</option>
-			<option v-for="stat in stats" :key="stat">{{ stat }}</option>
-		</select>
+	<div class="flex-container statform">
+		<div>
+			<select v-model="quarter">
+				<option disabled value="">Select Date</option>
+				<option v-for="quarter in dates" :key="quarter">{{ quarter }}</option>
+			</select>
+		</div>
+		<div>
+			<select v-model="indexCode">
+				<option disabled value="">Select Index</option>
+				<option v-for="index in indices" :key="index">{{ index }}</option>
+			</select>
+		</div>
+		<div>
+			<select v-model="mktIndex">
+				<option disabled value="">Select Market Proxy</option>
+				<option v-for="mktI in mktIndices" :key="mktI">{{ mktI }}</option>
+			</select>
+		</div>
+		<div>
+			<select v-model="stat">
+				<option disabled value="">Select Statistic</option>
+				<option v-for="stat in stats" :key="stat">{{ stat }}</option>
+			</select>
+		</div>
 	</div>
 
 	<div class="flex-container">
 		<div style="flex-grow: 1">
-			<table class="stocklist" v-if="indexCode">
+			<table class="statmatrix" v-if="indexCode">
 				<tr v-for="stock in msg" :key="stock">
 					<!-- <td v-for="col in stock" :key="col"> {{ col.toFixed(5) }} </td> -->
-					{{ stock }}
+					<div v-if="stock.constructor === Array">
+						<td>{{ stock }}</td>
+						<!-- <td v-for="col in stock" :key="col">{{col}}</td> -->
+					</div>
+					<div v-else>
+						<td>{{ stock }}</td>
+					</div>
 				</tr>
 			</table>
 		</div>
@@ -42,11 +56,12 @@ export default {
 			mktIndex : '',
 			stat : '',
 			res: {},
+			quarter: '',
 		};
 	},
 	methods: {
 		getMessage() {
-			const path = 'http://localhost:5000/stat?index='.concat(this.indexCode, '&market=', this.mktIndex, '&s=', this.stat);
+			const path = 'http://localhost:5000/stat?index='.concat(this.indexCode, '&market=', this.mktIndex, '&s=', this.stat, '&q=', this.quarter);
 			axios.get(path)
 				.then((res) => {
 					this.msg = res.data;
@@ -59,61 +74,86 @@ export default {
 	},
 	watch: {
 		indexCode() {
-			if (this.mktIndex !== '' && this.stat !== '') {
+			if (this.mktIndex !== '' && this.stat !== '' && this.quarter !=='') {
 				this.getMessage();
 			}
 		},
 		mktIndex() {
-			if (this.indexCode !== '' && this.stat !== '') {
+			if (this.indexCode !== '' && this.stat !== '' && this.quarter !=='') {
 				this.getMessage();
 			}
 		},
 		stat() {
-			if (this.mktIndex !== '' && this.indexCode !== '') {
+			if (this.mktIndex !== '' && this.indexCode !== '' && this.quarter !=='') {
+				this.getMessage();
+			}
+			// if (this.stat == )
+		},
+		quarter() {
+			if (this.mktIndex !== '' && this.indexCode !== '' && this.stat !=='') {
 				this.getMessage();
 			}
 		},
 	},
 	created() {
 		this.indices = ["ALSI", "FLED", "LRGC", "MIDC", "SMLC", "TOPI", "RESI", "FINI", "INDI", "PCAP", "SAPY", "ALTI"];
-		this.mktIndices = ["J203", "J200", "J250", "J257", "J258"]
-		this.stats = ['beta', 'specVols', 'pfBeta', 'sysCov', 'pfSysVol', 'specCov', 'pfSpecVol', 'totCov', 'pfVol', 'corrMat']
+		this.mktIndices = ["J200", "J203", "J250", "J257", "J258"];
+		this.stats = ['beta', 'specVols', 'pfBeta', 'sysCov', 'pfSysVol', 'specCov', 'pfSpecVol', 'totCov', 'pfVol', 'corrMat'];
+		this.dates = ['2021Q1','2020Q4','2020Q3','2020Q2','2020Q1','2019Q4','2019Q3','2019Q2','2019Q1','2018Q4','2018Q3','2018Q2','2018Q1','2017Q4','2017Q3'];
 	},
 
 };
 </script>
 
 <style>
-.stocklist {
-	margin-left: auto;
-	margin-right: auto;
-	border-collapse: collapse;
-}
-
-.stocklist td,
-.stocklist th {
-	border: 1px solid #ddd;
-	padding: 3px 10px 3px 10px;
-}
-
-.stocklist tr:nth-child(even) {
-	background-color: #f2f2f2;
-}
-
-.stocklist tr:hover {
-	background-color: #ddd;
-}
-
-.stocklist th {
-	padding-top: 12px;
-	padding-bottom: 12px;
-	text-align: left;
-	background-color: #348bd6;
-	color: white;
-}
 
 .flex-container {
     display: flex;
+}
+
+.statform {
+	justify-content: center;
+	padding-bottom: 1rem;
+}
+
+select {
+	padding: 0.5rem 0.5rem 0.5rem 0.5rem ;
+	background-color: #f0fdfa;
+	border-radius: 15px;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+	/* text-align: center; */
+}
+
+.statmatrix {
+	margin-left: auto;
+	margin-right: auto;
+	border-collapse: collapse;
+	padding: 0 20rem 0 0;
+}
+
+.statmatrix td {
+  padding: 0 0.3rem 0 0.3rem;
+}
+
+.statmatrix tr:nth-child(odd) {
+	background-color: #fdfcfc;
+}
+.statmatrix tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.statmatrix tr:hover {
+	background-color: #ddd;
+}
+
+.statmatrix th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align:center;
+	background-color: #348bd6;
+	color: white;
+	width: 6rem;
 }
 
 </style>

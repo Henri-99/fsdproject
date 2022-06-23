@@ -20,7 +20,7 @@
 
 						<li class="nav-item  btn btn-primary">
 							<router-link :to="{ name: 'PingTest' }">
-								Index Composition
+								Index Constituents
 							</router-link>
 						</li>
 
