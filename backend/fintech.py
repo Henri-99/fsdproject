@@ -58,7 +58,7 @@ def GetICsAndWeights(rDate, indexCode):
 			totalCap = totalCap + record[10]
 
 	for i in range(0, len(weights)):
-		weights[i] = round(weights[i]/totalCap,3)
+		weights[i] = weights[i]/totalCap
 
 	return np.array(ICs), np.array(weights)
 
@@ -83,7 +83,7 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 		index = record[2]	
 		
 		# Skip records outside given date
-		if (rDate.year != recordDate.year or rDate.month != recordDate.month or record[8] == 0):
+		if (rDate.year != recordDate.year or rDate.month != recordDate.month):
 			continue
 
 		if (instrument in ICs and index == mktIndexCode):
@@ -94,7 +94,13 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 		# Total market volatility
 		if(instrument == index and index == mktIndexCode):
 			mktVol = record[-2]
-
+		
+	# For 1-data-point shares, set beta=1 and vol=mktVol
+	for i in range(0,len(betas)):
+		if not betas[i]:
+			betas[i] = 1
+			specVols[i] = mktVol 
+		
 	return np.array(betas), np.array(specVols), mktVol
 
 # Function 3
@@ -142,11 +148,14 @@ def converter(ICs, weights):
 
 # Testing program
 if __name__ == "__main__":
-	ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALTI")
-	print(ICs)
-	print(weights)
-	converter(ICs, weights)
-	#betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J258")
-	#pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
-
+	ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALSI")
+	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J203")
+	pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
+	
+	print("WEIGHTS")
+	for i in weights: print(i)
+	print("BETAS")
+	for i in betas: print(i)
+	print("portfolio BETAS")
+	for i in pfBeta: print(i)
 
