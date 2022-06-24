@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import HomePage from "@/views/HomePage.vue"
+import FAQPage from "@/views/FAQPage.vue"
 import TimeSeries from "@/views/TimeSeries.vue"
 import PingTest from '@/views/Ping.vue'
 import StatsPage from '@/views/StatsPage.vue'
@@ -9,6 +10,10 @@ const routes = [{
         path: '/',
         name: 'HomePage',
         component: HomePage,
+    }, {
+        path: '/faq',
+        name: 'FAQPage',
+        component: FAQPage,
     }, {
         path: '/ping',
         name: 'PingTest',

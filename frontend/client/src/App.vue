@@ -37,7 +37,7 @@
 						</li>
 
 						<li class="nav-item  btn btn-primary">
-							<router-link :to="{ name: 'PingTest' }">
+							<router-link :to="{ name: 'FAQPage' }">
 								FAQs
 							</router-link>
 						</li>
