@@ -1,5 +1,4 @@
 <template>
-	<h1>Line Chart</h1>
 	<v-chart class="chart" :option="option" />
 </template>
 
@@ -9,7 +8,7 @@ import { CanvasRenderer } from "echarts/renderers";
 import { LineChart } from 'echarts/charts'
 import { GridComponent } from 'echarts/components'
 import VChart from "vue-echarts";
-import { ref, defineComponent } from "vue";
+import { ref, defineComponent, watchEffect } from "vue";
 
 use([
 	CanvasRenderer,
@@ -17,29 +16,70 @@ use([
 	GridComponent
 ]);
 
-
 export default defineComponent({
 	name: 'LineChart',
 	components: {
 		VChart,
 	},
-
-	setup() {
+	props: {
+		data: {},
+	},
+	setup(props) {
 		const option = ref({
+			tooltip: {
+				trigger: 'axis',
+				formatter: function (params) {
+					params = params[0];
+					var date = new Date(params.name);
+					return (
+						date.getDate() +
+						'/' +
+						(date.getMonth() + 1) +
+						'/' +
+						date.getFullYear() +
+						' : ' +
+						params.value[1]
+					);
+				},
+				axisPointer: {
+					animation: false
+				}
+			},
 			xAxis: {
-				type: 'category',
-				data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+				type: 'time',
+				splitLine: {
+					show: false
+				}
 			},
 			yAxis: {
-				type: 'value'
+				type: 'value',
+				boundaryGap: [0, '100%'],
+				splitLine: {
+					show: false
+				}
 			},
 			series: [
 				{
-					data: [150, 230, 224, 218, 135, 147, 260],
-					type: 'line'
+					name: 'Fake Data',
+					type: 'line',
+					showSymbol: false,
+					data: props.data
 				}
 			]
-		});
+		})
+
+		watchEffect(
+			() =>
+			(option.value.series = [
+				{
+					name: 'Fake Data',
+					type: 'line',
+					showSymbol: false,
+					data: props.data
+				},
+			]),
+			console.log(props.data), 
+		);
 
 		return { option };
 	}

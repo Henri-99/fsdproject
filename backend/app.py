@@ -79,6 +79,13 @@ def stat():
 		
 	return jsonify("None")
 
+@app.route('/stock', methods=['GET'])
+def stock():
+	stock = request.args.get('s')
+	if not stock: print("No code")
+	else:
+		return jsonify(ft.getTimeSeries(stock))
+	return jsonify("None")
 
 if __name__ == '__main__':
 	app.run()

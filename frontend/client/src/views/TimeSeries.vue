@@ -1,16 +1,18 @@
 <template>
-
-	<h2>Line Chart</h2>
-	<h3>x-axis: Date Period (user specified)</h3>
-	<h3>y-axis: Share (user specified)</h3>
-	<h3>y-axis: Index (user specified)</h3>
-	
-	<LineChart />
+	<div class="flex-container statform">
+		<div>
+			<select v-model="stock">
+				<option disabled value="">Select Stock</option>
+				<option v-for="stock in stocks" :key="stock">{{ stock }}</option>
+			</select>
+		</div>
+	</div>
+	<LineChart :data="msg" />
 
 </template>
 
 <script>
-
+import axios from 'axios';
 import LineChart from '../components/linechart.vue';
 
 export default {
@@ -18,6 +20,34 @@ export default {
 	components: {
 		LineChart
 	},
+	data() {
+		return {
+			msg: '',
+			stock: '',
+		};
+	},
+	methods: {
+		getMessage() {
+			const path = 'http://localhost:5000/stock?&s='.concat(this.stock);
+			axios.get(path)
+				.then((res) => {
+					this.msg = res.data;
+				})
+				.catch((error) => {
+					// eslint-disable-next-line
+					console.error(error);
+				});
+		},
+	},
+	created() {
+		this.stocks = ['NPN','MTN',];
+	
+	},
+	watch: {
+		stock() {
+			this.getMessage();
+		}
+	}
 };
 </script>
 

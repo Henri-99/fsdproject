@@ -106,55 +106,58 @@ def CalcStats(weights, betas, mktVol, specVols):
 	weights = weights[:, np.newaxis]
 	betas = betas[:, np.newaxis]
 	specVols = specVols[:, np.newaxis]
-	print("weights: ", weights.shape)
-	print("betas:   ",betas.shape)
-	print("specVol: ",specVols.shape)
 
 	# Portfolio Beta
 	pfBeta = np.matmul(weights.transpose(), betas)
-	print("pfBeta:  ",pfBeta.shape)
 
 	# Systematic Covariance Matrix
 	sysCov = np.matmul(betas, betas.transpose()) * mktVol**2
-	print("sysCov:  ",sysCov.shape)
 
 	# Portfolio Systematic Variance
 	pfSysVol = pfBeta * np.matmul(betas.transpose(), weights) * mktVol**2
-	print("pfSysVol:",pfSysVol.shape)
 
 	# Specific Covariance Matrix 
 	specCov = np.matmul(np.diag(specVols.flat), np.diag(specVols.flat))
-	print("specCov: ",specCov.shape)
 
 	# Portfolio Specific Variance
 	pfSpecVol = np.matmul(np.matmul(weights.transpose(), specCov),weights)
-	print("pfSpecVol:",pfSpecVol.shape)
 
 	# Total Covariance Matrix
 	totCov = sysCov + specCov
-	print("totCov:  ",totCov.shape)
 
 	# Portfolio Variance
 	pfVol = pfSysVol + pfSpecVol
-	print("pfSysVol:",pfSysVol.shape)
 
 	# Correlation Matrix
 	D = np.diagflat(np.diag(totCov))
 	invD = np.linalg.inv(D) 
 	corrMat = np.matmul(invD, np.matmul(totCov, invD))
-	print("corrMat: ", corrMat.shape)
+
 	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
+
+# Time Series
+def getTimeSeries(instrument):
+	query = "SELECT * FROM tbl_EOD_Equity_Data WHERE [Instrument] = '" + instrument + "'"
+	cursor.execute(query)
+	data = []
+	for record in cursor:
+		thisDate = [record[0].year, record[0].month, record[0].day]
+		data.append({
+			'name' : record[0].isoformat(),
+			'value' : ['/'.join(str(x) for x in thisDate), record[2]]
+		})
+	return(data)
 
 # Testing program
 if __name__ == "__main__":
-	ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALSI")
-	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J203")
-	pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
+	# ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALSI")
+	# betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J203")
+	# pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
 	
-	print("WEIGHTS")
-	for i in weights: print(i)
-	print("BETAS")
-	for i in betas: print(i)
-	print("portfolio BETAS")
-	for i in pfBeta: print(i)
-
+	# print("WEIGHTS")
+	# for i in weights: print(i)
+	# print("BETAS")
+	# for i in betas: print(i)
+	# print("portfolio BETAS")
+	# for i in pfBeta: print(i)
+	getTimeSeries("NPN")
