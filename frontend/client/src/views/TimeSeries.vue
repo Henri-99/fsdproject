@@ -1,10 +1,9 @@
 <template>
 	<div class="flex-container statform">
 		<div>
-			<select v-model="stock">
-				<option disabled value="">Select Stock</option>
-				<option v-for="stock in stocks" :key="stock">{{ stock }}</option>
-			</select>
+			<input  v-model="stock" placeholder="Enter stock ticker">
+				<!-- <option disabled value="">Select Stock</option>
+				<option v-for="stock in stocks" :key="stock">{{ stock }}</option> -->
 		</div>
 	</div>
 	<LineChart :data="msg" />

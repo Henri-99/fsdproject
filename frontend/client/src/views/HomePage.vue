@@ -90,7 +90,7 @@
 					<img class="image2" src="https://static.thenounproject.com/png/2196096-200.png" alt="Topic 1">
 				</div>
 			</div>
-			<button class="btn btn-info btn-lg buttons" type="button">Example button</button>
+			<!-- <button class="btn btn-info btn-lg buttons" type="button">Example button</button> -->
 		</div>
 	</div>
 

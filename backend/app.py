@@ -38,7 +38,7 @@ def ping_pong():
 		if (small > 0):
 			indices.append({
 				"value" : small,
-				"name" : "SMALL"
+				"name" : "OTHER"
 			})
 		return jsonify(indices)
 	return jsonify("None")
@@ -84,7 +84,10 @@ def stock():
 	stock = request.args.get('s')
 	if not stock: print("No code")
 	else:
-		return jsonify(ft.getTimeSeries(stock))
+		try:
+			return jsonify(ft.getTimeSeries(stock))
+		except:
+			return jsonify("None")		
 	return jsonify("None")
 
 if __name__ == '__main__':

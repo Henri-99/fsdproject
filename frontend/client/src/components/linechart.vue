@@ -53,14 +53,13 @@ export default defineComponent({
 			},
 			yAxis: {
 				type: 'value',
-				boundaryGap: [0, '100%'],
 				splitLine: {
 					show: false
 				}
 			},
 			series: [
 				{
-					name: 'Fake Data',
+					name: 'Stock Data',
 					type: 'line',
 					showSymbol: false,
 					data: props.data
@@ -72,7 +71,7 @@ export default defineComponent({
 			() =>
 			(option.value.series = [
 				{
-					name: 'Fake Data',
+					name: 'Data',
 					type: 'line',
 					showSymbol: false,
 					data: props.data

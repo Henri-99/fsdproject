@@ -31,7 +31,7 @@
 
 		<div>
 			<PieChart :key="quarter" :indexName="indexCode" :data="msg" />
-			<p style='font-size : 0.7rem; color : lightgray'>SMALL consists of all stocks having<br /> a weight less
+			<p style='font-size : 0.7rem; color : lightgray'>OTHER consists of all stocks having<br /> a weight less
 				than 0.5% </p>
 		</div>
 
