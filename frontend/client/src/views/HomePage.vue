@@ -27,7 +27,7 @@
 					</div>
 				</div>
 				<div class="carousel-item">
-					<img src="https://rmc.cl/wp-content/uploads/IA-background.jpg" class="d-block w-100 img-fluid"
+					<img src="../assets/advance.jpg" class="d-block w-100 img-fluid"
 						alt="Responsive image">
 					<div class="carousel-caption d-none d-md-block">
 						<h5>Advance</h5>
