@@ -19,9 +19,7 @@
 						</li>
 
 						<li class="nav-item  btn btn-primary">
-							<router-link :to="{ name: 'PingTest' }">
-								Index Constituents
-							</router-link>
+							
 						</li>
 
 						<li class="nav-item  btn btn-primary">
