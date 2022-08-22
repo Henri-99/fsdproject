@@ -8,4 +8,4 @@ Group project for Financial Systems Design
 4. Install Python modules using `pip install -r requirements.txt`
 5. Launch backend using `flask run`
 6. In a separate termnial, `cd client` and `npm install`
-7. Launch backend using `npm run serve`
+7. Launch frontend using `npm run serve`
