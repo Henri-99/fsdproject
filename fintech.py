@@ -1,14 +1,7 @@
-import pyodbc
+import database as db
 import numpy as np
 import pandas as pd
 import datetime as date
-
-conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=localhost\SQLEXPRESS;'
-                      'Database=AIFMRM_ERS;'
-                      'Trusted_Connection=yes;')
-
-cursor = conn.cursor()
 
 # Function 1
 def GetICsAndWeights(rDate, indexCode):
@@ -19,6 +12,7 @@ def GetICsAndWeights(rDate, indexCode):
 	each stock to the respective index'''
 	
 	query = 'SELECT * FROM tbl_Index_Constituents'
+	cursor = db.connect()
 	cursor.execute(query)
 
 	ICs = list()
@@ -53,6 +47,8 @@ def GetICsAndWeights(rDate, indexCode):
 			weights.append(record[10]) # Column 10 is gross market cap
 			totalCap = totalCap + record[10]
 
+	db.close(cursor)
+
 	for i in range(0, len(weights)):
 		weights[i] = weights[i]/totalCap
 
@@ -66,6 +62,7 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 	mktIndexCode: "J203", "J200", "J250", "J257", "J258"
 	'''
 	query = 'SELECT * FROM tbl_BA_Beta_Output'
+	cursor = db.connect()
 	cursor.execute(query)
 
 	betas = list()
@@ -90,7 +87,8 @@ def GetBetasMktAndSpecVols(rDate, ICs, mktIndexCode):
 		# Total market volatility
 		if(instrument == index and index == mktIndexCode):
 			mktVol = record[-2]
-		
+	db.close(cursor)
+
 	# For 1-data-point shares, set beta=1 and vol=mktVol
 	for i in range(0,len(betas)):
 		if not betas[i]:
@@ -138,6 +136,7 @@ def CalcStats(weights, betas, mktVol, specVols):
 # Time Series
 def getTimeSeries(instrument):
 	query = "SELECT * FROM tbl_EOD_Equity_Data WHERE [Instrument] = '" + instrument + "'"
+	cursor = db.connect()
 	cursor.execute(query)
 	data = []
 	for record in cursor:
@@ -146,7 +145,11 @@ def getTimeSeries(instrument):
 			'name' : record[0].isoformat(),
 			'value' : ['/'.join(str(x) for x in thisDate), record[2]]
 		})
+	db.close(cursor)
 	return(data)
+
+def GetPricesAndWeights(stocks, quantites):
+	
 
 # Testing program
 if __name__ == "__main__":
