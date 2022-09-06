@@ -18,6 +18,16 @@
 				<option v-for="mktI in mktIndices" :key="mktI">{{ mktI }}</option>
 			</select>
 		</div>
+	</div>
+
+	<div class="flex-container">
+		The portfolio beta is: {{ pfBeta }}
+		<br />The portfolio Systematic Variance is: {{ pfSysVol }}
+		<br />The portfolio Specific Variance is: {{ pfSpecVol }}
+		<br />The portfolio Variance is: {{ pfVol }}
+
+	</div>
+	<div class="flex-container statform">
 		<div>
 			<select v-model="stat">
 				<option disabled value="">Select Statistic</option>
@@ -57,9 +67,24 @@ export default {
 			stat : '',
 			res: {},
 			quarter: '',
+			pfBeta: 0,
+			pfSysVol: 0,
+			pfSpecVol: 0,
+			pfVol: 0,
 		};
 	},
 	methods: {
+		getPortfolio(){
+			const path = 'http://localhost:5000/pfstats?index='.concat(this.indexCode, '&market=', this.mktIndex, '&q=', this.quarter);
+			axios.get(path)
+			.then((res) => {
+				this.pfBeta = res.data.pfBeta
+				this.pfSysVol = res.data.pfSysVol
+				this.pfSpecVol = res.data.pfSpecVol
+				this.pfVol = res.data.pfVol
+			});
+
+		},
 		getMessage() {
 			const path = 'http://localhost:5000/stat?index='.concat(this.indexCode, '&market=', this.mktIndex, '&s=', this.stat, '&q=', this.quarter);
 			axios.get(path)
@@ -74,11 +99,17 @@ export default {
 	},
 	watch: {
 		indexCode() {
-			if (this.mktIndex !== '' && this.stat !== '' && this.quarter !=='') {
+			if (this.mktIndex !== ''  && this.quarter !== '') {
+				this.getPortfolio();
+			}
+			if (this.mktIndex !== '' && this.stat !== '' && this.quarter !== '') {
 				this.getMessage();
 			}
 		},
 		mktIndex() {
+			if (this.indexCode !== ''  && this.quarter !=='') {
+				this.getPortfolio();
+			}
 			if (this.indexCode !== '' && this.stat !== '' && this.quarter !=='') {
 				this.getMessage();
 			}
@@ -90,6 +121,9 @@ export default {
 			// if (this.stat == )
 		},
 		quarter() {
+			if (this.mktIndex !== '' && this.indexCode !== '') {
+				this.getPortfolio();
+			}
 			if (this.mktIndex !== '' && this.indexCode !== '' && this.stat !=='') {
 				this.getMessage();
 			}
@@ -98,7 +132,7 @@ export default {
 	created() {
 		this.indices = ["ALSI", "FLED", "LRGC", "MIDC", "SMLC", "TOPI", "RESI", "FINI", "INDI", "PCAP", "SAPY", "ALTI"];
 		this.mktIndices = ["J200", "J203", "J250", "J257", "J258"];
-		this.stats = ['beta', 'specVols', 'pfBeta', 'sysCov', 'pfSysVol', 'specCov', 'pfSpecVol', 'totCov', 'pfVol', 'corrMat'];
+		this.stats = ['beta', 'specVols', 'sysCov', 'specCov', 'totCov', 'corrMat'];
 		this.dates = ['2021Q1','2020Q4','2020Q3','2020Q2','2020Q1','2019Q4','2019Q3','2019Q2','2019Q1','2018Q4','2018Q3','2018Q2','2018Q1','2017Q4','2017Q3'];
 	},
 

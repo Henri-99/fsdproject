@@ -5,6 +5,7 @@ import TimeSeries from "@/views/TimeSeries.vue"
 import PingTest from '@/views/Ping.vue'
 import StatsPage from '@/views/StatsPage.vue'
 import PageNotFound from "@/views/PageNotFound.vue"
+import PortfolioBuilder from "@/views/PortfolioBuilder.vue"
 
 const routes = [{
         path: '/',
@@ -27,6 +28,11 @@ const routes = [{
         path: '/stats',
         name: 'StatsPage',
         component: StatsPage,
+    },
+    {
+        path: '/myPortfolio',
+        name: 'PortfolioBuilder',
+        component: PortfolioBuilder
     },
     {
         path: '/:catchAll(.*)*',

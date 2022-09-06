@@ -60,23 +60,34 @@ def stat():
 			return jsonify(betas.tolist())
 		elif (stat == 'specVols'):
 			return jsonify(specVols.tolist())
-		elif (stat == 'pfBeta'):
-			return jsonify(pfBeta.tolist())
 		elif (stat == 'sysCov'):
 			return jsonify(sysCov.tolist())
-		elif (stat == 'pfSysVol'):
-			return jsonify(pfSysVol.tolist())
 		elif (stat == 'specCov'):
 			return jsonify(specCov.tolist())
-		elif (stat == 'pfSpecVol'):
-			return jsonify(pfSpecVol.tolist())
 		elif (stat == 'totCov'):
 			return jsonify(totCov.tolist())
-		elif (stat == 'pfVol'):
-			return jsonify(pfVol.tolist())
 		elif (stat == 'corrMat'):
 			return jsonify(corrMat.tolist())
 		
+	return jsonify("None")
+
+
+@app.route('/pfstats', methods=['GET'])
+def pfstat():
+	index = request.args.get('index')
+	mktIndex = request.args.get('market')
+	quarter = request.args.get('q').split('Q')
+
+	if not index or not mktIndex or not stat: print("Missing input")
+	else:
+		ICs, weights = ft.GetICsAndWeights(date.datetime(int(quarter[0]), int(quarter[1])*3, 1), index)
+		betas, specVols, mktVol = ft.GetBetasMktAndSpecVols(date.datetime(int(quarter[0]), int(quarter[1])*3, 1), ICs, mktIndex)
+		pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = ft.CalcStats(weights, betas, mktVol, specVols)
+		return jsonify({
+			"pfBeta" : round(pfBeta[0,0],4), 
+			"pfSysVol" : round(pfSysVol[0,0],4),
+			"pfSpecVol" : round(pfSpecVol[0,0],4), 
+			"pfVol" : round(pfVol[0,0],4)})
 	return jsonify("None")
 
 @app.route('/stock', methods=['GET'])

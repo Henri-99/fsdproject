@@ -35,6 +35,11 @@
 								Statistics
 							</router-link>
 						</li>
+						<li class="nav-item  btn btn-primary">
+							<router-link :to="{ name: 'PortfolioBuilder' }">
+								Portfolio Builder
+							</router-link>
+						</li>
 
 						<li class="nav-item  btn btn-primary">
 							<router-link :to="{ name: 'FAQPage' }">
