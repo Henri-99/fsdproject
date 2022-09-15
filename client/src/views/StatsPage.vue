@@ -2,35 +2,50 @@
 	<div class="flex-container statform">
 		<div>
 			<select v-model="quarter">
-				<option disabled value="">Select Date</option>
+				<option disabled value="">Date</option>
 				<option v-for="quarter in dates" :key="quarter">{{ quarter }}</option>
 			</select>
 		</div>
 		<div>
 			<select v-model="indexCode">
-				<option disabled value="">Select Index</option>
+				<option disabled value="">Index</option>
 				<option v-for="index in indices" :key="index">{{ index }}</option>
 			</select>
 		</div>
 		<div>
 			<select v-model="mktIndex">
-				<option disabled value="">Select Market Proxy</option>
+				<option disabled value="">Market Proxy</option>
 				<option v-for="mktI in mktIndices" :key="mktI">{{ mktI }}</option>
 			</select>
 		</div>
 	</div>
 
+	<h3 v-if="pfBeta">Portfolio Statistics</h3>
 	<div class="flex-container">
-		The portfolio beta is: {{ pfBeta }}
-		<br />The portfolio Systematic Variance is: {{ pfSysVol }}
-		<br />The portfolio Specific Variance is: {{ pfSpecVol }}
-		<br />The portfolio Variance is: {{ pfVol }}
-
+		<table class="statmatrix" v-if="pfBeta">
+			<tr>
+				<td>Beta</td>
+				<td>{{ pfBeta }} </td>
+			</tr>
+			<tr>
+				<td>Systematic Variance</td>
+				<td>{{ pfSysVol }} </td>
+			</tr>
+			<tr>
+				<td>Specific Variance</td>
+				<td>{{ pfSpecVol }} </td>
+			</tr>
+			<tr>
+				<td>Variance</td>
+				<td>{{ pfVol }} </td>
+			</tr>
+		</table>
 	</div>
+
 	<div class="flex-container statform">
 		<div>
 			<select v-model="stat">
-				<option disabled value="">Select Statistic</option>
+				<option disabled value="">Statistic</option>
 				<option v-for="stat in stats" :key="stat">{{ stat }}</option>
 			</select>
 		</div>

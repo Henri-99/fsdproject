@@ -2,13 +2,13 @@
 	<div class="flex-container statform">
 		<div>
 			<select v-model="quarter">
-				<option disabled value="">Select Date</option>
+				<option disabled value="">Date</option>
 				<option v-for="quarter in dates" :key="quarter">{{ quarter }}</option>
 			</select>
 		</div>
 		<div>
 			<select v-model="indexCode">
-				<option disabled value="">Select Index</option>
+				<option disabled value="">Index</option>
 				<option v-for="index in indices" :key="index">{{ index }}</option>
 			</select>
 		</div>

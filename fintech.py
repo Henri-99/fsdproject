@@ -148,8 +148,39 @@ def getTimeSeries(instrument):
 	db.close(cursor)
 	return(data)
 
-def GetPricesAndWeights(stocks, quantites):
-	
+def GetPricesAndWeights(stocks, quantities):
+	for i in range(len(stocks)):
+		stocks[i] = stocks[i].upper()
+
+	prices = []
+	totals = []
+	weights = []
+	data = []
+	cap = 0
+	query = "SELECT [Instrument], [Price] FROM tbl_EOD_Equity_Data WHERE [Date] = '2021-03-31'"
+	cursor = db.connect()
+	cursor.execute(query)
+	for record in cursor:
+		if record[0] in stocks:
+			prices.append(int(record[1]))
+	if len(prices) == 0:
+		return "None"
+
+	for i in range(len(stocks)):
+		total = int(quantities[i])*prices[i]
+		totals.append(total)
+		cap += total
+		
+	for i in range(len(stocks)):
+		weights.append(round(float(totals[i])/float(cap),4))
+		data.append({
+			'price' : prices[i],
+			'total' : totals[i],
+			'weight' : weights[i]
+		})
+
+	return data
+
 
 # Testing program
 if __name__ == "__main__":

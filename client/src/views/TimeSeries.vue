@@ -2,17 +2,18 @@
 	<div class="flex-container statform">
 		<div>
 			<input  v-model="stock" placeholder="Enter stock ticker">
+			<input  v-model="stock2" placeholder="Enter stock ticker">
 				<!-- <option disabled value="">Select Stock</option>
 				<option v-for="stock in stocks" :key="stock">{{ stock }}</option> -->
 		</div>
 	</div>
 	<LineChart :data="msg" />
-
 </template>
 
 <script>
 import axios from 'axios';
 import LineChart from '../components/linechart.vue';
+
 
 export default {
 	name: 'TimeSeries',
@@ -44,7 +45,9 @@ export default {
 	},
 	watch: {
 		stock() {
-			this.getMessage();
+			if (this.stock.length > 2){
+				this.getMessage();
+			}
 		}
 	}
 };

@@ -119,6 +119,7 @@ a:hover {
 .btn-primary{
 	background-color: #1D70B7;
 	border-color: #1a62a1;
+	margin-top: 2px;
 }
 
 

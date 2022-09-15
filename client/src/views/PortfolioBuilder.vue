@@ -6,45 +6,54 @@
                 <table class="pfTable">
                     <th>#</th>
                     <th>Stock</th>
-                    <th>Amount</th>
+                    <th>Quantity</th>
                     <th>Price</th>
+                    <th>Total</th>
                     <th>Weight</th>
                     <tr><button @click="add">+</button></tr>
                     <tr v-for="stock in n" :key="stock">
                             <td>{{ stock }}</td>
-                            <td><input v-model=name[stock]></td>
-                            <td><input v-model=quantity[stock]></td>
-                            <td>{{ price[stock] }}</td>
-                            <td>{{ weight[stock]}}</td>
-                            <td><button @click="remove(stock)">x</button></td>
+                            <td><input v-model=name[stock-1] style="width:80px"></td>
+                            <td><input v-model=quantity[stock-1] style="width:60px"></td>
+                            <td>{{ price[stock-1] }}</td>
+                            <td>{{ total[stock-1] }}</td>
+                            <td>{{ weight[stock-1]}}</td>
+                            <td><button @click="remove(stock-1)">x</button></td>
                     </tr>
                     
                 </table>
+
                     
+                <button @click="retrieve" style="margin:10px 2px 10px 2px">Analyze</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
 	name: 'PortfolioBuilder',
 	data() {
 		return {
 			n: 1,
-            name: [""],
-            quantity : [0],
-            price : [""],
-            weight : [""]
+            name: [],
+            quantity : [],
+            price : [],
+            total : [],
+            weight : [],
+            stockdata : [],
 		};
 	},
 	methods: {
         add() {
             this.n = this.n + 1;
-            this.name.push("");
-            this.quantity.push(0);
-            this.price.push("");
-            this.weight.push("");
+            this.name.push('');
+            this.quantity.push('');
+            this.price.push('');
+            this.total.push('')
+            this.weight.push('');
         },
         remove(i) {
             if (this.n > 0) {
@@ -52,10 +61,31 @@ export default {
                 this.name.splice(i, 1);
                 this.quantity.splice(i, 1);
                 this.price.splice(i, 1);
+                this.total.splice(i, 1);
                 this.weight.splice(i, 1);
             }
         },
-    },
+        update(res){
+            console.log(res);
+        },
+        retrieve() {
+            axios.post('http://localhost:5000/pf',
+                {
+                    stocks: this.name,
+                    quantities: this.quantity
+                })
+                .then((response) => {
+                    this.stockdata = response.data;
+                    for (let i = 0; i < this.stockdata.length; i++) {
+                        this.price[i] = this.stockdata[i].price;
+                        this.total[i] = this.stockdata[i].total;
+                        this.weight[i] = this.stockdata[i].weight;
+                    }
+                    
+                })
+
+        },
+    }
 }
 </script>
 
