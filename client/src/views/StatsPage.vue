@@ -81,7 +81,7 @@ export default {
 			mktIndex : '',
 			stat : '',
 			res: {},
-			quarter: '',
+			quarter: '2021Q1',
 			pfBeta: 0,
 			pfSysVol: 0,
 			pfSpecVol: 0,

@@ -56,17 +56,12 @@ export default {
             this.weight.push('');
         },
         remove(i) {
-            if (this.n > 0) {
-                this.n = this.n - 1;
-                this.name.splice(i, 1);
-                this.quantity.splice(i, 1);
-                this.price.splice(i, 1);
-                this.total.splice(i, 1);
-                this.weight.splice(i, 1);
-            }
-        },
-        update(res){
-            console.log(res);
+            this.n = this.n - 1;
+            this.name.splice(i, 1);
+            this.quantity.splice(i, 1);
+            this.price.splice(i, 1);
+            this.total.splice(i, 1);
+            this.weight.splice(i, 1);
         },
         retrieve() {
             axios.post('http://localhost:5000/pf',
@@ -81,7 +76,6 @@ export default {
                         this.total[i] = this.stockdata[i].total;
                         this.weight[i] = this.stockdata[i].weight;
                     }
-                    
                 })
 
         },

@@ -52,7 +52,7 @@ export default {
 			msg: '',
 			indexCode: '',
 			res: {},
-			quarter: '',
+			quarter: '2021Q1',
 		};
 	},
 	methods: {

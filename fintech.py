@@ -134,6 +134,7 @@ def CalcStats(weights, betas, mktVol, specVols):
 	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
 
 # Time Series
+# Returns historic stock price data
 def getTimeSeries(instrument):
 	query = "SELECT * FROM tbl_EOD_Equity_Data WHERE [Instrument] = '" + instrument + "'"
 	cursor = db.connect()
@@ -148,21 +149,27 @@ def getTimeSeries(instrument):
 	db.close(cursor)
 	return(data)
 
+# Portfolio Builder
+# Returns prices, totals, and weights given list of stocks and quantities
 def GetPricesAndWeights(stocks, quantities):
+	prices = []
 	for i in range(len(stocks)):
 		stocks[i] = stocks[i].upper()
+		prices.append(0)
 
-	prices = []
 	totals = []
 	weights = []
 	data = []
+
 	cap = 0
 	query = "SELECT [Instrument], [Price] FROM tbl_EOD_Equity_Data WHERE [Date] = '2021-03-31'"
 	cursor = db.connect()
 	cursor.execute(query)
 	for record in cursor:
 		if record[0] in stocks:
-			prices.append(int(record[1]))
+			prices[stocks.index(record[0])] = int(record[1])
+	db.close(cursor)
+
 	if len(prices) == 0:
 		return "None"
 
