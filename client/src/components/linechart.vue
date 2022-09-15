@@ -23,6 +23,7 @@ export default defineComponent({
 	},
 	props: {
 		data: {},
+		xAxisData: {},
 	},
 	setup(props) {
 		const option = ref({
