@@ -1,5 +1,5 @@
 # fsdproject
-Group project for Financial Systems Design
+The official GitHub repo for the INF5006S Financial Systems Design project for Group 3. This project is a financial dashboard that aims to generate useful insights and data visualisations from raw equity price data from the JSE. The dataset has been provided by the African Institute of Financial Markets and Risk Management. 
 
 # Setup Instructions
 1. Install [SQL Server 2019 Express](https://www.microsoft.com/en-gb/sql-server/sql-server-downloads) and [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms)
