@@ -197,23 +197,11 @@ def GetPricesAndWeights(stocks, quantities):
 			'weight' : weights[i]
 		})
 
+
 	return data
 
-def GetEquitiesList():
-	query = "SELECT [Alpha], [Instrument], [Gross Market Capitalisation] FROM tbl_Index_Constituents WHERE [Date] = '2021-03-23'" # ORDER BY [Gross Market Capitalisation] DESC"
-	cursor = db.connect()
-	cursor.execute(query)
-	list = []
-	for record in cursor:
-		list.append(record[0] + " : " + record[1])
-	print(list)
-	db.close(cursor)
-
-# Function 3
+# Returns portfolio statistics and matrices
 def customPfStats(stocks, weights, mktIndex):
-	print(stocks)
-	print(weights)
-
 	weights = np.array(weights)[:, np.newaxis]
 
 	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2021, 3, 1), stocks, mktIndex)
@@ -260,16 +248,17 @@ def customPfStats(stocks, weights, mktIndex):
 
 	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
 
+# Generates a list of tickers and company names for all equities in database
+def GetEquitiesList():
+	query = "SELECT [Alpha], [Instrument], [Gross Market Capitalisation] FROM tbl_Index_Constituents WHERE [Date] = '2021-03-23'" # ORDER BY [Gross Market Capitalisation] DESC"
+	cursor = db.connect()
+	cursor.execute(query)
+	list = []
+	for record in cursor:
+		list.append(record[0] + " : " + record[1])
+	# print(list)
+	db.close(cursor)
+
 # Testing program
 if __name__ == "__main__":
-	# ICs, weights = GetICsAndWeights(date.datetime(2017, 9, 15), "ALSI")
-	# betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2017, 9, 15), ICs, "J203")
-	# pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = CalcStats(weights, betas, mktVol, specVols)
-	
-	# print("WEIGHTS")
-	# for i in weights: print(i)
-	# print("BETAS")
-	# for i in betas: print(i)
-	# print("portfolio BETAS")
-	# for i in pfBeta: print(i)
-	GetEquitiesList()
+	print("FinTech Module for FSD Project")
