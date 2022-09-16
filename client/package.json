@@ -15,7 +15,7 @@
     "vue": "^3.2.13",
     "vue-echarts": "^6.1.0",
     "vue-router": "^4.0.16",
-    "vue-select": "^3.20.0",
+    "vue-select": "^4.0.0-beta.5",
     "vue-slider-component": "^3.2.20"
   },
   "devDependencies": {

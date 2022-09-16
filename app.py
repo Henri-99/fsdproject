@@ -122,6 +122,19 @@ def stock():
 			return jsonify("None")
 	return jsonify("None")
 
+@app.route('/customStats', methods=['POST'])
+def customStats():
+	data = request.get_json()
+	pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat = ft.customPfStats(data["stocks"], data["weights"], data["index"])
+	print(pfBeta)
+	return jsonify({
+			"pfBeta": round(pfBeta[0, 0], 4),
+			"pfSysVol": round(pfSysVol[0, 0], 4),
+			"pfSpecVol": round(pfSpecVol[0, 0], 4),
+			"pfVol": round(pfVol[0, 0], 4)})
+
+	print(data)
+	return jsonify("None")
 
 if __name__ == '__main__':
 	app.run()

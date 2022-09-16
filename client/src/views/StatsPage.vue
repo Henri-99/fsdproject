@@ -43,8 +43,8 @@
 	</div>
 
 	<div class="flex-container statform">
-		<div>
-			<select v-model="stat">
+		<div style="margin:2rem">
+			<select v-model="stat" v-if="pfVol">
 				<option disabled value="">Statistic</option>
 				<option v-for="stat in stats" :key="stat">{{ stat }}</option>
 			</select>
@@ -55,10 +55,8 @@
 		<div style="flex-grow: 1">
 			<table class="statmatrix" v-if="indexCode">
 				<tr v-for="stock in msg" :key="stock">
-					<!-- <td v-for="col in stock" :key="col"> {{ col.toFixed(5) }} </td> -->
 					<div v-if="stock.constructor === Array">
 						<td>{{ stock }}</td>
-						<!-- <td v-for="col in stock" :key="col">{{col}}</td> -->
 					</div>
 					<div v-else>
 						<td>{{ stock }}</td>
@@ -90,7 +88,7 @@ export default {
 	},
 	methods: {
 		getPortfolio(){
-			const path = 'http://localhost:5000/pfstats?index='.concat(this.indexCode, '&market=', this.mktIndex, '&q=', this.quarter);
+			const path = 'http://localhost:5000/pfstats?index='.concat(this.indexCode, '&market=', this.mktIndex.slice(0,4), '&q=', this.quarter);
 			axios.get(path)
 			.then((res) => {
 				this.pfBeta = res.data.pfBeta
@@ -101,7 +99,7 @@ export default {
 
 		},
 		getMessage() {
-			const path = 'http://localhost:5000/stat?index='.concat(this.indexCode, '&market=', this.mktIndex, '&s=', this.stat, '&q=', this.quarter);
+			const path = 'http://localhost:5000/stat?index='.concat(this.indexCode, '&market=', this.mktIndex.slice(0,4), '&s=', this.stat, '&q=', this.quarter);
 			axios.get(path)
 				.then((res) => {
 					this.msg = res.data;
@@ -133,7 +131,6 @@ export default {
 			if (this.mktIndex !== '' && this.indexCode !== '' && this.quarter !=='') {
 				this.getMessage();
 			}
-			// if (this.stat == )
 		},
 		quarter() {
 			if (this.mktIndex !== '' && this.indexCode !== '') {
@@ -146,7 +143,7 @@ export default {
 	},
 	created() {
 		this.indices = ["ALSI", "FLED", "LRGC", "MIDC", "SMLC", "TOPI", "RESI", "FINI", "INDI", "PCAP", "SAPY", "ALTI"];
-		this.mktIndices = ["J200", "J203", "J250", "J257", "J258"];
+		this.mktIndices = ["J200 Top 40", "J203 All Share", "J250 FINI", "J257 INDI", "J258 RESI"];
 		this.stats = ['beta', 'specVols', 'sysCov', 'specCov', 'totCov', 'corrMat'];
 		this.dates = ['2021Q1','2020Q4','2020Q3','2020Q2','2020Q1','2019Q4','2019Q3','2019Q2','2019Q1','2018Q4','2018Q3','2018Q2','2018Q1','2017Q4','2017Q3'];
 	},

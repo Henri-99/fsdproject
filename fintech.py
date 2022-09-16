@@ -131,6 +131,17 @@ def CalcStats(weights, betas, mktVol, specVols):
 	invD = np.linalg.inv(D) 
 	corrMat = np.matmul(invD, np.matmul(totCov, invD))
 
+	# Rounding for display purposes
+	pfBeta = np.around(pfBeta, 5) 
+	sysCov = np.around(sysCov, 5)
+	pfSysVol = np.around(pfSysVol, 5)
+	specCov = np.around(specCov, 5)
+	pfSpecVol = np.around(pfSpecVol, 5)
+	totCov = np.around(totCov, 5)
+	pfVol = np.around(pfVol, 5)
+	corrMat = np.around(corrMat, 5)
+
+
 	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
 
 # Time Series
@@ -188,6 +199,66 @@ def GetPricesAndWeights(stocks, quantities):
 
 	return data
 
+def GetEquitiesList():
+	query = "SELECT [Alpha], [Instrument], [Gross Market Capitalisation] FROM tbl_Index_Constituents WHERE [Date] = '2021-03-23'" # ORDER BY [Gross Market Capitalisation] DESC"
+	cursor = db.connect()
+	cursor.execute(query)
+	list = []
+	for record in cursor:
+		list.append(record[0] + " : " + record[1])
+	print(list)
+	db.close(cursor)
+
+# Function 3
+def customPfStats(stocks, weights, mktIndex):
+	print(stocks)
+	print(weights)
+
+	weights = np.array(weights)[:, np.newaxis]
+
+	betas, specVols, mktVol = GetBetasMktAndSpecVols(date.datetime(2021, 3, 1), stocks, mktIndex)
+	betas = betas[:, np.newaxis]
+	specVols = specVols[:, np.newaxis]
+
+
+	# Portfolio Beta
+	pfBeta = np.matmul(weights.transpose(), betas)
+
+	# Systematic Covariance Matrix
+	sysCov = np.matmul(betas, betas.transpose()) * mktVol**2
+
+	# Portfolio Systematic Variance
+	pfSysVol = pfBeta * np.matmul(betas.transpose(), weights) * mktVol**2
+
+	# Specific Covariance Matrix 
+	specCov = np.matmul(np.diag(specVols.flat), np.diag(specVols.flat))
+
+	# Portfolio Specific Variance
+	pfSpecVol = np.matmul(np.matmul(weights.transpose(), specCov),weights)
+
+	# Total Covariance Matrix
+	totCov = sysCov + specCov
+
+	# Portfolio Variance
+	pfVol = pfSysVol + pfSpecVol
+
+	# Correlation Matrix
+	D = np.diagflat(np.diag(totCov))
+	invD = np.linalg.inv(D) 
+	corrMat = np.matmul(invD, np.matmul(totCov, invD))
+
+	# Rounding for display purposes
+	pfBeta = np.around(pfBeta, 5) 
+	sysCov = np.around(sysCov, 5)
+	pfSysVol = np.around(pfSysVol, 5)
+	specCov = np.around(specCov, 5)
+	pfSpecVol = np.around(pfSpecVol, 5)
+	totCov = np.around(totCov, 5)
+	pfVol = np.around(pfVol, 5)
+	corrMat = np.around(corrMat, 5)
+
+
+	return pfBeta, sysCov, pfSysVol, specCov, pfSpecVol, totCov, pfVol, corrMat
 
 # Testing program
 if __name__ == "__main__":
@@ -201,4 +272,4 @@ if __name__ == "__main__":
 	# for i in betas: print(i)
 	# print("portfolio BETAS")
 	# for i in pfBeta: print(i)
-	getTimeSeries("NPN")
+	GetEquitiesList()
