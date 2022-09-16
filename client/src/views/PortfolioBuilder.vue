@@ -41,9 +41,9 @@
         </select>
     </div>
 
-    <h3 v-if="pfBeta">Portfolio Statistics</h3>
+    <h3 style="margin:2rem">Portfolio Statistics</h3>
 	<div class="flex-container">
-		<table class="statmatrix" v-if="pfBeta">
+		<table class="statmatrix">
 			<tr>
 				<td>Beta</td>
 				<td>{{ pfBeta }} </td>
@@ -143,8 +143,13 @@ export default {
     },
     watch: {
         mktIndex() {
-            this.getStats()
+            this.getStats();
         },
+        n() {
+            if(this.mktIndex) {
+                this.getStats();
+            }
+        }
     },
     created() {
         this.mktIndices = ["J200", "J203", "J250", "J257", "J258"];
